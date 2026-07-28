@@ -1,0 +1,2132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f8f1df" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="googlebot" content="index, follow, max-image-preview:large" />
+    <meta name="application-name" content="Solarpunk Drill Power Calculator" />
+
+    <title>Solarpunk Drill Power Calculator</title>
+    <meta
+      name="description"
+      content="Calculate Solarpunk drill power, battery runtime, recharge time, material costs, and the next solar panel, drill, or battery to build." />
+    <link rel="canonical" href="https://arthur.run/solarpunk-drill-power-calculator" />
+    <link rel="preconnect" href="https://assets.solarpunkwiki.com" crossorigin />
+    <link
+      rel="icon"
+      type="image/webp"
+      href="https://assets.solarpunkwiki.com/icons/art/Icon_Drill.webp" />
+    <link
+      rel="apple-touch-icon"
+      href="https://assets.solarpunkwiki.com/icons/art/Icon_Drill.webp" />
+
+    <meta property="og:title" content="Solarpunk Drill Power Calculator" />
+    <meta
+      property="og:description"
+      content="Enter your current grid and materials to calculate performance and the next upgrades." />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://arthur.run/solarpunk-drill-power-calculator" />
+    <meta property="og:site_name" content="arthur.run" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:image"
+      content="https://assets.solarpunkwiki.com/icons/art/Icon_Drill.webp" />
+    <meta property="og:image:alt" content="Automatic Drill from the game Solarpunk" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Solarpunk Drill Power Calculator" />
+    <meta
+      name="twitter:description"
+      content="Calculate Solarpunk drill power, battery runtime, recharge time, materials, and upgrade order." />
+    <meta
+      name="twitter:image"
+      content="https://assets.solarpunkwiki.com/icons/art/Icon_Drill.webp" />
+    <meta name="twitter:image:alt" content="Automatic Drill from the game Solarpunk" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Solarpunk Drill Power Calculator",
+        "url": "https://arthur.run/solarpunk-drill-power-calculator",
+        "description": "Calculate Solarpunk drill power, battery runtime, recharge time, material costs, and a one-build-at-a-time upgrade order.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true,
+        "inLanguage": "en"
+      }
+    </script>
+
+    <style>
+      :root {
+        --outside: #eef6ef;
+        --page: #fbf7ed;
+        --paper: #fffaf1;
+        --paper-alt: #f6ecd7;
+        --ink: #263b2f;
+        --brown: #5a351f;
+        --muted: #6d7b71;
+        --green: #2e805c;
+        --green-dark: #205f46;
+        --green-soft: #e7f2e9;
+        --cyan: #58b7c6;
+        --cyan-soft: #e8f5f5;
+        --gold: #dda94e;
+        --gold-dark: #ad7428;
+        --line: #dfc38d;
+        --line-soft: #ead9b5;
+        --danger: #9a4439;
+        --danger-soft: #faece7;
+        --shadow: 0 10px 24px rgba(77, 57, 30, 0.08);
+        --radius: 14px;
+        --radius-small: 10px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 10% 8%, rgba(88, 183, 198, 0.07), transparent 28rem),
+          radial-gradient(circle at 92% 14%, rgba(46, 128, 92, 0.07), transparent 30rem),
+          var(--outside);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
+        line-height: 1.45;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      a {
+        color: inherit;
+      }
+
+      .page {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 36px clamp(20px, 3vw, 56px) 30px;
+        background: var(--page);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 28px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .title-block {
+        max-width: 780px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 27px;
+        padding: 4px 9px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--gold-dark);
+        background: #fff4dc;
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: inherit;
+        font-weight: 800;
+        color: var(--ink);
+      }
+
+      h1 {
+        margin: 13px 0 7px;
+        font-size: clamp(38px, 6vw, 62px);
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+      }
+
+      .subtitle {
+        max-width: 720px;
+        margin: 0;
+        color: var(--brown);
+        font-family: inherit;
+        font-size: clamp(17px, 2vw, 21px);
+        font-weight: 700;
+      }
+
+      .intro {
+        max-width: 720px;
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .header-icons {
+        display: flex;
+        align-items: flex-end;
+        min-width: 260px;
+        min-height: 144px;
+        padding: 12px 18px 8px;
+        border-bottom: 3px solid var(--cyan);
+        background: linear-gradient(180deg, transparent, rgba(88, 183, 198, 0.08));
+      }
+
+      .header-icons img {
+        width: 102px;
+        height: 102px;
+        object-fit: contain;
+        filter: drop-shadow(0 9px 7px rgba(75, 55, 28, 0.12));
+      }
+
+      .header-icons img + img {
+        margin-left: -23px;
+      }
+      .header-icons .battery {
+        width: 88px;
+        height: 88px;
+      }
+
+      .section {
+        margin-top: 26px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 250, 241, 0.88);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(760px, 1.7fr) minmax(420px, 0.8fr);
+        grid-template-areas:
+          'upgrades config'
+          'upgrades facts';
+        gap: 22px;
+        align-items: start;
+        margin-top: 26px;
+      }
+
+      #calculator {
+        grid-area: config;
+        margin-top: 0;
+      }
+
+      #calculator .planner-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workspace .fact-strip {
+        grid-area: facts;
+        grid-template-columns: 1fr;
+        margin-top: 0;
+      }
+
+      .upgrade-section {
+        grid-area: upgrades;
+        margin-top: 0;
+      }
+
+      .section-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 20px 22px 14px;
+        border-bottom: 1px solid var(--line-soft);
+        background: rgba(246, 236, 215, 0.55);
+      }
+
+      .section-heading h2 {
+        margin: 0;
+        font-size: 27px;
+        letter-spacing: -0.02em;
+      }
+
+      .section-heading p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .planner-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.82fr) minmax(460px, 1.18fr);
+        gap: 18px;
+        padding: 18px;
+      }
+
+      .input-stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .input-card,
+      .current-card,
+      .material-result {
+        border: 1px solid var(--line-soft);
+        border-radius: var(--radius-small);
+        background: var(--paper);
+      }
+
+      .input-card {
+        padding: 16px;
+      }
+
+      .input-card h3,
+      .current-card h3,
+      .material-result h3 {
+        margin: 0 0 12px;
+        font-size: 19px;
+      }
+
+      .fields {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .fields.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .fields.four {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .field input,
+      .field select {
+        width: 100%;
+        min-height: 42px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        outline: none;
+        color: var(--ink);
+        background: #fffdf7;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .field input:focus,
+      .field select:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(46, 128, 92, 0.12);
+      }
+
+      .field small {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      details {
+        border-top: 1px solid var(--line-soft);
+        margin-top: 14px;
+        padding-top: 12px;
+      }
+
+      summary {
+        color: var(--green-dark);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      details .fields {
+        margin-top: 12px;
+      }
+
+      .current-card {
+        overflow: hidden;
+      }
+
+      .current-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 16px 17px 12px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .current-card-header h3 {
+        margin: 0;
+      }
+
+      .current-grid-controls {
+        padding: 16px 17px;
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .status-line {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 7px;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 27px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .status.good {
+        color: var(--green-dark);
+        background: var(--green-soft);
+      }
+      .status.warn {
+        color: #8a5a18;
+        background: #fff0cf;
+      }
+      .status.bad {
+        color: var(--danger);
+        background: var(--danger-soft);
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .metric {
+        min-height: 111px;
+        padding: 15px 16px;
+        border-right: 1px solid var(--line-soft);
+        border-bottom: 1px solid var(--line-soft);
+      }
+
+      .metric:nth-child(3n) {
+        border-right: 0;
+      }
+      .metric:nth-last-child(-n + 3) {
+        border-bottom: 0;
+      }
+
+      .metric-label {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .metric-value {
+        display: block;
+        margin-top: 6px;
+        color: var(--ink);
+        font-family: inherit;
+        font-weight: 800;
+        font-size: 27px;
+        line-height: 1.05;
+      }
+
+      .metric-sub {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .positive {
+        color: var(--green-dark);
+      }
+      .negative {
+        color: var(--danger);
+      }
+
+      .material-result {
+        margin-top: 14px;
+        padding: 15px 16px;
+        border-left: 4px solid var(--cyan);
+      }
+
+      .material-result h3 {
+        margin-bottom: 6px;
+      }
+      .material-result p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .material-result strong {
+        color: var(--ink);
+      }
+
+      .fact-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .fact {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 12px;
+        align-items: center;
+        min-height: 98px;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-small);
+        background: var(--paper);
+        text-decoration: none;
+        box-shadow: var(--shadow);
+      }
+
+      .fact:hover {
+        border-color: var(--gold-dark);
+      }
+
+      .fact img {
+        width: 64px;
+        height: 64px;
+        object-fit: contain;
+      }
+
+      .fact strong {
+        display: block;
+        font-family: inherit;
+        font-size: 18px;
+      }
+
+      .fact span {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .table-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .button {
+        min-height: 38px;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        color: var(--brown);
+        background: #fffaf0;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .button:hover {
+        border-color: var(--green);
+      }
+
+      .button.primary {
+        color: #fff;
+        border-color: var(--green-dark);
+        background: linear-gradient(#3c946d, var(--green));
+        box-shadow: 0 4px 8px rgba(32, 95, 70, 0.16);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        min-width: 860px;
+        border-collapse: collapse;
+      }
+
+      th {
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        color: var(--brown);
+        background: #f7edd9;
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.045em;
+        text-align: left;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      td {
+        padding: 12px;
+        border-bottom: 1px solid var(--line-soft);
+        vertical-align: middle;
+        font-size: 13px;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+      tbody tr:hover {
+        background: rgba(88, 183, 198, 0.045);
+      }
+
+      tbody tr.long-backup td {
+        background: #f3ead7;
+      }
+
+      tbody tr.long-backup:hover td {
+        background: #eee2ca;
+      }
+
+      .step {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--brown);
+        background: #fff8e9;
+        font-weight: 850;
+      }
+
+      .build-cell {
+        display: flex;
+        align-items: center;
+        min-width: 185px;
+        gap: 10px;
+      }
+
+      .build-cell img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+      }
+
+      .build-title {
+        display: block;
+        color: var(--ink);
+        font-weight: 850;
+      }
+      .build-reason {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .setup {
+        display: flex;
+        flex-wrap: wrap;
+        min-width: 190px;
+        gap: 5px;
+      }
+
+      .setup-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        min-height: 29px;
+        padding: 3px 7px;
+        border: 1px solid var(--line-soft);
+        border-radius: 7px;
+        background: #fffaf0;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .setup-chip img {
+        width: 23px;
+        height: 23px;
+        object-fit: contain;
+      }
+
+      .main-number {
+        display: block;
+        font-weight: 850;
+        white-space: nowrap;
+      }
+      .sub-number {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .cost-list {
+        min-width: 135px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .cost-list strong {
+        color: var(--ink);
+      }
+
+      .availability {
+        display: inline-flex;
+        max-width: 190px;
+        padding: 5px 8px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .availability.ready {
+        color: var(--green-dark);
+        background: var(--green-soft);
+      }
+      .availability.missing {
+        color: var(--danger);
+        background: var(--danger-soft);
+      }
+      .availability.untracked {
+        color: var(--muted);
+        background: #f2eee3;
+      }
+
+      .empty-path {
+        padding: 30px 22px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .error {
+        display: none;
+        margin: 0 18px 18px;
+        padding: 11px 13px;
+        border: 1px solid #dfaba1;
+        border-radius: 8px;
+        color: var(--danger);
+        background: var(--danger-soft);
+        font-size: 13px;
+      }
+
+      .sources {
+        margin-top: 32px;
+        padding: 28px 0 8px;
+        border-top: 2px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .sources h2 {
+        margin: 0 0 8px;
+        font-size: 26px;
+      }
+
+      .sources > p {
+        max-width: 900px;
+        margin: 0 0 22px;
+      }
+
+      .math-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px 28px;
+      }
+
+      .math-block {
+        padding-top: 14px;
+        border-top: 1px solid var(--line-soft);
+      }
+
+      .math-block.wide {
+        grid-column: span 2;
+      }
+
+      .math-block h3 {
+        margin: 0 0 9px;
+        font-size: 16px;
+      }
+
+      .math-block p {
+        margin: 0 0 9px;
+      }
+
+      .formula {
+        display: block;
+        margin: 8px 0;
+        padding: 8px 10px;
+        overflow-wrap: anywhere;
+        border-left: 3px solid var(--cyan);
+        background: var(--paper);
+        color: var(--brown);
+      }
+      .sources a {
+        color: var(--green-dark);
+        font-weight: 800;
+        text-decoration: none;
+      }
+      .sources a:hover {
+        text-decoration: underline;
+      }
+
+      code {
+        padding: 2px 5px;
+        border: 1px solid var(--line-soft);
+        border-radius: 5px;
+        background: #fff9ec;
+        color: var(--brown);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      @media (max-width: 1180px) {
+        .workspace {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            'config'
+            'facts'
+            'upgrades';
+        }
+
+        .workspace .fact-strip {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .math-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .page {
+          padding-inline: 24px;
+        }
+        .planner-grid {
+          grid-template-columns: 1fr;
+        }
+        .header-icons {
+          min-width: 220px;
+        }
+        .fact-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .workspace .fact-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .math-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .math-block.wide {
+          grid-column: auto;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .page {
+          width: calc(100% - 16px);
+          padding: 24px 16px 28px;
+        }
+        .topbar {
+          flex-direction: column;
+        }
+        .header-icons {
+          width: 100%;
+          min-height: 104px;
+          justify-content: center;
+        }
+        .header-icons img {
+          width: 78px;
+          height: 78px;
+        }
+        .header-icons .battery {
+          width: 70px;
+          height: 70px;
+        }
+        .planner-grid {
+          padding: 12px;
+        }
+        .fields,
+        .fields.two,
+        .fields.four {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .metrics {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .metric:nth-child(3n) {
+          border-right: 1px solid var(--line-soft);
+        }
+        .metric:nth-child(2n) {
+          border-right: 0;
+        }
+        .metric:nth-last-child(-n + 3) {
+          border-bottom: 1px solid var(--line-soft);
+        }
+        .metric:nth-last-child(-n + 2) {
+          border-bottom: 0;
+        }
+        .section-heading {
+          flex-direction: column;
+        }
+        .sources {
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 470px) {
+        .fields,
+        .fields.two,
+        .fields.four {
+          grid-template-columns: 1fr;
+        }
+        .metrics {
+          grid-template-columns: 1fr;
+        }
+        .metric,
+        .metric:nth-child(2n),
+        .metric:nth-child(3n) {
+          border-right: 0;
+          border-bottom: 1px solid var(--line-soft);
+        }
+        .metric:last-child {
+          border-bottom: 0;
+        }
+        .current-card-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .status-line {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <div class="title-block">
+          <span class="tag">Unofficial game calculator</span>
+          <h1>Solarpunk Drill Power Calculator</h1>
+          <p class="subtitle">
+            Enter what you have. See how the grid performs and what to build next.
+          </p>
+          <p class="intro">
+            Calculates daytime surplus, battery recharge, nighttime runtime, material
+            shortages, and a one-build-at-a-time upgrade order.
+          </p>
+        </div>
+        <div class="header-icons" aria-hidden="true">
+          <img
+            src="https://assets.solarpunkwiki.com/icons/art/ICON_Solarpanel.webp"
+            alt="" />
+          <img src="https://assets.solarpunkwiki.com/icons/art/Icon_Drill.webp" alt="" />
+          <img
+            class="battery"
+            src="https://assets.solarpunkwiki.com/icons/art/Icon_Battery.webp"
+            alt="" />
+        </div>
+      </header>
+
+      <div class="workspace">
+      <section class="section" id="calculator">
+        <div class="section-heading">
+          <div>
+            <h2>Your setup</h2>
+            <p>Values update as you type.</p>
+          </div>
+        </div>
+
+        <div class="planner-grid">
+          <div class="input-stack">
+            <article class="current-card" aria-live="polite">
+              <div class="current-card-header">
+                <h3>Current grid</h3>
+                <div class="status-line" id="currentStatuses"></div>
+              </div>
+              <div class="current-grid-controls">
+                <div class="fields">
+                  <div class="field">
+                    <label for="panels">Solar panels</label>
+                    <input id="panels" type="number" min="0" max="999" step="1" value="2" />
+                  </div>
+                  <div class="field">
+                    <label for="drills">Drills</label>
+                    <input id="drills" type="number" min="0" max="50" step="1" value="1" />
+                  </div>
+                  <div class="field">
+                    <label for="batteries">Batteries</label>
+                    <input
+                      id="batteries"
+                      type="number"
+                      min="0"
+                      max="999"
+                      step="1"
+                      value="0" />
+                  </div>
+                </div>
+                <div class="fields" style="margin-top: 10px">
+                  <div class="field" style="grid-column: 1 / -1">
+                    <label for="generators">Active fueled generators</label>
+                    <input
+                      id="generators"
+                      type="number"
+                      min="0"
+                      max="50"
+                      step="1"
+                      value="0" />
+                    <small>Optional · 120 power each. Fuel burns continuously and must be replenished manually.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="metrics" id="currentMetrics"></div>
+            </article>
+
+            <article class="input-card">
+              <h3>Materials</h3>
+              <div class="fields four">
+                <div class="field">
+                  <label for="iron">Iron</label>
+                  <input
+                    id="iron"
+                    type="number"
+                    min="0"
+                    max="999999"
+                    step="1"
+                    placeholder="—" />
+                </div>
+                <div class="field">
+                  <label for="copper">Copper</label>
+                  <input
+                    id="copper"
+                    type="number"
+                    min="0"
+                    max="999999"
+                    step="1"
+                    placeholder="—" />
+                </div>
+                <div class="field">
+                  <label for="glass">Glass</label>
+                  <input
+                    id="glass"
+                    type="number"
+                    min="0"
+                    max="999999"
+                    step="1"
+                    placeholder="—" />
+                </div>
+                <div class="field">
+                  <label for="silicon">Silicon</label>
+                  <input
+                    id="silicon"
+                    type="number"
+                    min="0"
+                    max="999999"
+                    step="1"
+                    placeholder="—" />
+                </div>
+              </div>
+              <small style="display: block; margin-top: 8px; color: var(--muted)"
+                >Leave all four blank to ignore inventory. Once one value is entered,
+                blank fields count as 0.</small
+              >
+            </article>
+
+            <article class="input-card">
+              <h3>Goal</h3>
+              <div class="fields">
+                <div class="field">
+                  <label for="targetDrills">Target drills</label>
+                  <input
+                    id="targetDrills"
+                    type="number"
+                    min="0"
+                    max="50"
+                    step="1"
+                    value="5" />
+                </div>
+              </div>
+
+              <details>
+                <summary>Advanced planning assumptions</summary>
+                <div class="fields">
+                  <div class="field" style="grid-column: 1 / -1">
+                    <label for="approach">Upgrade approach</label>
+                    <select id="approach">
+                      <option value="balanced" selected>Balanced · production first</option>
+                      <option value="conservative">Conservative · buffer first</option>
+                    </select>
+                    <small>Balanced activates each Drill sooner; Conservative completes its protection first.</small>
+                  </div>
+                  <div class="field">
+                    <label for="bufferMinutes">Battery buffer</label>
+                    <input
+                      id="bufferMinutes"
+                      type="number"
+                      min="0"
+                      max="1440"
+                      step="1"
+                      value="10" />
+                    <small>Minutes the full load should survive night or worse weather.</small>
+                  </div>
+                  <div class="field">
+                    <label for="rechargeTarget">Recover used energy</label>
+                    <select id="rechargeTarget">
+                      <option value="0">Any positive surplus</option>
+                      <option value="10">Within 10 min</option>
+                      <option value="20" selected>Within one day (20 min)</option>
+                      <option value="30">Within 30 min</option>
+                      <option value="60">Within 60 min</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="weather">Planning weather</label>
+                    <select id="weather">
+                      <option value="100">Clear · 100 per panel</option>
+                      <option value="70" selected>Cloudy · 70 per panel</option>
+                      <option value="10">Rain · 10 per panel</option>
+                      <option value="5">Thunderstorm · 5 per panel</option>
+                    </select>
+                  </div>
+                </div>
+                <small style="display: block; margin-top: 8px; color: var(--muted)"
+                  >Planning weather is the sustained daytime baseline. The Battery buffer
+                  covers temporary lower output. Values come from release game data.</small
+                >
+              </details>
+            </article>
+            <article
+              class="material-result"
+              id="materialResult"
+              aria-live="polite"></article>
+          </div>
+        </div>
+        <div class="error" id="errorBox" role="alert"></div>
+      </section>
+
+      <div class="fact-strip" aria-label="Verified building data">
+        <a
+          class="fact"
+          href="https://solarpunkwiki.com/database/buildings/Solarpanel/"
+          target="_blank"
+          rel="noopener noreferrer">
+          <img
+            src="https://assets.solarpunkwiki.com/icons/art/ICON_Solarpanel.webp"
+            alt="Solar Panel" />
+          <div>
+            <strong>Solar Panel</strong>
+            <span>8 Iron · 8 Glass · 8 Copper · Wiki page ↗</span>
+          </div>
+        </a>
+        <a
+          class="fact"
+          href="https://solarpunkwiki.com/database/buildings/Drill/"
+          target="_blank"
+          rel="noopener noreferrer">
+          <img
+            src="https://assets.solarpunkwiki.com/icons/art/Icon_Drill.webp"
+            alt="Drill" />
+          <div>
+            <strong>Drill</strong>
+            <span>120 power · 10 Iron · 10 Copper · Wiki page ↗</span>
+          </div>
+        </a>
+        <a
+          class="fact"
+          href="https://solarpunkwiki.com/database/buildings/Battery/"
+          target="_blank"
+          rel="noopener noreferrer">
+          <img
+            src="https://assets.solarpunkwiki.com/icons/art/Icon_Battery.webp"
+            alt="Battery" />
+          <div>
+            <strong>Battery</strong>
+            <span>96,000 energy · 200/s charge or discharge · 10 Iron · 15 Silicon · 10 Copper · Wiki page ↗</span>
+          </div>
+        </a>
+        <a
+          class="fact"
+          href="https://solarpunkwiki.com/database/items/Generator/"
+          target="_blank"
+          rel="noopener noreferrer">
+          <img
+            src="https://assets.solarpunkwiki.com/icons/art/Icon_EnergyGenerator.webp"
+            alt="Energy Generator" />
+          <div>
+            <strong>Energy Generator</strong>
+            <span>120 fueled power · 5 Iron · 5 Copper · manual backup · Wiki page ↗</span>
+          </div>
+        </a>
+      </div>
+
+      <section class="section upgrade-section">
+        <div class="section-heading">
+          <div>
+            <h2>Upgrade order</h2>
+            <p id="pathDescription">One row per build. Recharge times do not assume time between upgrades.</p>
+          </div>
+          <div class="table-actions">
+            <button class="button" id="copyLink" type="button">Copy settings link</button>
+          </div>
+        </div>
+        <div class="table-wrap" id="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Build</th>
+                <th>Setup after build</th>
+                <th>Day power</th>
+                <th>Backup result</th>
+                <th>Build cost</th>
+                <th>Your inventory</th>
+              </tr>
+            </thead>
+            <tbody id="upgradeRows"></tbody>
+          </table>
+        </div>
+        <div class="empty-path" id="emptyPath" hidden>
+          Your current drill count already meets the target.
+        </div>
+      </section>
+      </div>
+
+      <footer class="sources">
+        <h2>How the calculator works</h2>
+        <p>
+          The planner treats one power unit as one energy unit per second, matching the
+          wiki's worked Battery example. All times are estimates for a constant load and
+          the selected weather. The formulas below are exactly what the calculator uses.
+        </p>
+
+        <div class="math-grid">
+          <section class="math-block">
+            <h3>1. Generation and demand</h3>
+            <p>
+              Let <code>P</code> be Solar Panels, <code>D</code> be Drills, and
+              <code>G</code> be active fueled Generators. Each Drill consumes 120 power.
+              One panel produces 100 in clear weather, 70 when cloudy, 10 in rain,
+              5 in a thunderstorm, and 0 at night. Each fueled Generator adds a constant
+              120 in every condition.
+            </p>
+            <code class="formula">generation = P × power per panel + G × 120</code>
+            <code class="formula">demand = D × 120</code>
+            <code class="formula">surplus = generation − demand</code>
+            <p>
+              A positive surplus can charge Batteries. A negative value is the amount
+              Batteries must supply; if their output cannot cover it, the grid overloads.
+            </p>
+          </section>
+
+          <section class="math-block">
+            <h3>2. Battery limits</h3>
+            <p>
+              Let <code>B</code> be Batteries. Each stores 96,000 energy and can charge
+              or discharge at no more than 200 power per second. More Solar Panels cannot
+              make a Battery exceed that input limit.
+            </p>
+            <code class="formula">bank capacity = B × 96,000</code>
+            <code class="formula">bank input/output limit = B × 200</code>
+            <code class="formula">actual charge rate = min(max(surplus, 0), B × 200)</code>
+            <p>
+              Full-load Battery operation is possible only when
+              <code>B × 200 ≥ Battery-backed demand</code>. Because fueled Generators also
+              run at night, <code>Battery-backed demand = max(0, demand − G × 120)</code>.
+              The calculator does not assume that a smaller
+              number of machines keeps running when the grid is overloaded.
+            </p>
+          </section>
+
+          <section class="math-block">
+            <h3>3. Recharge and runtime</h3>
+            <p>
+              Upgrade rows show two bounds, not the Battery's current state. Empty-to-full
+              assumes the entire bank starts empty. Runtime-from-full assumes it starts full.
+            </p>
+            <code class="formula">empty-to-full seconds = bank capacity ÷ actual charge rate</code>
+            <code class="formula">full runtime seconds = bank capacity ÷ Battery-backed demand</code>
+            <p>
+              No current charge state is inferred. All displayed recharge and runtime values
+              use the empty-bank and full-bank bounds above.
+            </p>
+          </section>
+
+          <section class="math-block wide">
+            <h3>4. How the upgrade target is calculated</h3>
+            <p>
+              The optimizer does not require a 100% recharge. The Battery buffer says how
+              many minutes the full load should run from storage. The recovery window says
+              how quickly Solar must replace only that consumed energy. One full game day is
+              20 real-time minutes.
+            </p>
+            <code class="formula">Battery-backed demand = max(0, demand − G × 120)</code>
+            <code class="formula">buffer energy = Battery-backed demand × buffer minutes × 60</code>
+            <code class="formula">Batteries for output = ceil(Battery-backed demand ÷ 200)</code>
+            <code class="formula">Batteries for capacity = ceil(buffer energy ÷ 96,000)</code>
+            <code class="formula">required Batteries = max(output count, capacity count)</code>
+            <code class="formula">recovery power = buffer energy ÷ (recovery minutes × 60)</code>
+            <code class="formula">required Panels = ceil((demand + recovery power − G × 120) ÷ panel output)</code>
+            <p>
+              With “any positive surplus,” recovery time is not constrained: the planner
+              simply requires at least one unit of spare generation. The default Balanced
+              approach reaches baseline power, activates the next Drill, then adds its buffer
+              and recovery generation before planning another Drill. The Conservative approach
+              interleaves Panels and Batteries until those protections are complete, then
+              activates the Drill. Both approaches reach the same final setup; only build order
+              differs. Every table row is one physical build.
+            </p>
+          </section>
+
+          <section class="math-block">
+            <h3>5. Worked example: 4 / 2 / 2</h3>
+            <p>
+              In clear weather, 4 panels generate 400. Two Drills consume 240, leaving
+              160 for charging. Two Batteries store 192,000 and have a combined 400/s
+              limit, so the available 160 surplus is the actual charge rate.
+            </p>
+            <code class="formula">empty-to-full = 192,000 ÷ 160 = 1,200 sec = 20 min</code>
+            <code class="formula">runtime from full = 192,000 ÷ 240 = 800 sec = 13m 20s</code>
+            <p>
+              For a 10-minute buffer, the load consumes 144,000 energy. Recovering that in
+              20 minutes needs 120 charging power. Demand plus recovery is 360, so the
+              result rounds up to 4 clear-weather panels.
+            </p>
+          </section>
+
+          <section class="math-block">
+            <h3>6. Materials</h3>
+            <p>Costs are accumulated in table order and compared with the entered inventory.</p>
+            <code class="formula">Solar Panel = 8 Iron + 8 Copper + 8 Glass</code>
+            <code class="formula">Drill = 10 Iron + 10 Copper</code>
+            <code class="formula">Battery = 10 Iron + 10 Copper + 15 Silicon</code>
+            <code class="formula">Energy Generator = 5 Iron + 5 Copper</code>
+            <p>
+              “Reachable” means the inventory covers every build up to that row, not only
+              the item on that row. Generators are user-selected temporary sources and are
+              not automatically added to the upgrade path or its cumulative cost.
+            </p>
+          </section>
+
+          <section class="math-block wide">
+            <h3>Limits and sources</h3>
+            <p>
+              <strong>This upgrade path is an approximation, not a statistical prediction.</strong>
+              Weather is modeled as a constant selected daytime baseline, cloudy by default.
+              Rain, thunderstorms, night, and sequences of poor conditions can drain Batteries
+              faster or delay recovery. The game does not publish reliable probabilities or
+              durations for those conditions, so the calculator does not invent occurrence
+              rates. A selected Generator is assumed fueled and active for the entire calculated
+              period. The wiki verifies 120 constant output, combustible fuel, and the 5 Iron +
+              5 Copper recipe. Current player testing says fuel burns even without demand,
+              conversion is manual, and converted runtime is capped around 12 minutes; those
+              operational details are not published game-file values. Charging loss, exact
+              Battery balancing, and sleep simulation are also undocumented. Actual results can
+              differ if weather persists or the game distributes charge unevenly between Batteries.
+            </p>
+            <p>
+              Sources:
+              <a href="https://solarpunk.wikily.gg/energy" target="_blank" rel="noopener noreferrer">energy and weather data</a>,
+              <a href="https://solarpunkwiki.com/database/buildings/Drill/" target="_blank" rel="noopener noreferrer">Drill data</a>,
+              <a href="https://solarpunkwiki.com/database/buildings/Battery/" target="_blank" rel="noopener noreferrer">Battery data</a>,
+              <a href="https://solarpunkwiki.com/database/buildings/Solarpanel/" target="_blank" rel="noopener noreferrer">Solar Panel data</a>, and
+              <a href="https://solarpunk.wikily.gg/items/generator" target="_blank" rel="noopener noreferrer">Energy Generator data</a>.
+            </p>
+          </section>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      const DATA = Object.freeze({
+        drill: {
+          name: 'Drill',
+          draw: 120,
+          image: 'https://assets.solarpunkwiki.com/icons/art/Icon_Drill.webp',
+          cost: { iron: 10, copper: 10, glass: 0, silicon: 0 }
+        },
+        battery: {
+          name: 'Battery',
+          capacity: 96_000,
+          rate: 200,
+          image: 'https://assets.solarpunkwiki.com/icons/art/Icon_Battery.webp',
+          cost: { iron: 10, copper: 10, glass: 0, silicon: 15 }
+        },
+        panel: {
+          name: 'Solar Panel',
+          image: 'https://assets.solarpunkwiki.com/icons/art/ICON_Solarpanel.webp',
+          cost: { iron: 8, copper: 8, glass: 8, silicon: 0 }
+        },
+        generator: {
+          name: 'Energy Generator',
+          output: 120,
+          image: 'https://assets.solarpunkwiki.com/icons/art/Icon_EnergyGenerator.webp',
+          cost: { iron: 5, copper: 5, glass: 0, silicon: 0 }
+        }
+      });
+
+      const MATERIAL_NAMES = {
+        iron: 'Iron',
+        copper: 'Copper',
+        glass: 'Glass',
+        silicon: 'Silicon'
+      };
+
+      const elements = Object.fromEntries(
+        [
+          'panels',
+          'drills',
+          'batteries',
+          'generators',
+          'iron',
+          'copper',
+          'glass',
+          'silicon',
+          'targetDrills',
+          'approach',
+          'bufferMinutes',
+          'rechargeTarget',
+          'weather'
+        ].map((id) => [id, document.getElementById(id)])
+      );
+
+      Object.assign(elements, {
+        currentStatuses: document.getElementById('currentStatuses'),
+        currentMetrics: document.getElementById('currentMetrics'),
+        materialResult: document.getElementById('materialResult'),
+        upgradeRows: document.getElementById('upgradeRows'),
+        pathDescription: document.getElementById('pathDescription'),
+        errorBox: document.getElementById('errorBox'),
+        copyLink: document.getElementById('copyLink'),
+        tableWrap: document.getElementById('tableWrap'),
+        emptyPath: document.getElementById('emptyPath')
+      });
+
+      function requiredInteger(input, label, minimum = 0, maximum = Infinity) {
+        const value = Number(input.value);
+        if (
+          input.value.trim() === '' ||
+          !Number.isInteger(value) ||
+          value < minimum ||
+          value > maximum
+        ) {
+          throw new Error(`${label} must be a whole number from ${minimum} to ${maximum}.`);
+        }
+        return value;
+      }
+
+      function optionalInteger(input) {
+        if (input.value.trim() === '') return null;
+        const value = Number(input.value);
+        if (!Number.isInteger(value) || value < 0 || value > 999999) {
+          throw new Error('Material amounts must be whole numbers from 0 to 999999.');
+        }
+        return value;
+      }
+
+      function readSettings() {
+        const materials = {
+          iron: optionalInteger(elements.iron),
+          copper: optionalInteger(elements.copper),
+          glass: optionalInteger(elements.glass),
+          silicon: optionalInteger(elements.silicon)
+        };
+        const tracksMaterials = Object.values(materials).some((value) => value !== null);
+
+        if (tracksMaterials) {
+          for (const key of Object.keys(materials)) {
+            materials[key] ??= 0;
+          }
+        }
+
+        const settings = {
+          panels: requiredInteger(elements.panels, 'Solar panels', 0, 999),
+          drills: requiredInteger(elements.drills, 'Drills', 0, 50),
+          batteries: requiredInteger(elements.batteries, 'Batteries', 0, 999),
+          generators: requiredInteger(elements.generators, 'Active generators', 0, 50),
+          targetDrills: requiredInteger(elements.targetDrills, 'Target drills', 0, 50),
+          approach: elements.approach.value,
+          bufferMinutes: requiredInteger(elements.bufferMinutes, 'Battery buffer', 0, 1440),
+          rechargeMinutes: Number(elements.rechargeTarget.value),
+          panelOutput: Number(elements.weather.value),
+          weather: elements.weather.options[elements.weather.selectedIndex]?.textContent,
+          batteryOutput: DATA.battery.rate,
+          materials,
+          tracksMaterials
+        };
+
+        if (!['balanced', 'conservative'].includes(settings.approach)) {
+          throw new Error('Upgrade approach is invalid.');
+        }
+        if (![0, 10, 20, 30, 60].includes(settings.rechargeMinutes)) {
+          throw new Error('Battery recharge target is invalid.');
+        }
+        if (![100, 70, 10, 5].includes(settings.panelOutput)) {
+          throw new Error('Planning weather is invalid.');
+        }
+        if (settings.targetDrills < settings.drills) {
+          throw new Error('Target drills cannot be lower than your current drill count.');
+        }
+
+        return settings;
+      }
+
+      function zeroMaterials() {
+        return { iron: 0, copper: 0, glass: 0, silicon: 0 };
+      }
+
+      function addMaterials(target, source) {
+        for (const key of Object.keys(target)) target[key] += source[key] || 0;
+        return target;
+      }
+
+      function subtractMaterials(left, right) {
+        const result = zeroMaterials();
+        for (const key of Object.keys(result))
+          result[key] = (left[key] || 0) - (right[key] || 0);
+        return result;
+      }
+
+      function missingMaterials(inventory, required) {
+        const missing = zeroMaterials();
+        for (const key of Object.keys(missing)) {
+          missing[key] = Math.max(0, (required[key] || 0) - (inventory[key] || 0));
+        }
+        return missing;
+      }
+
+      function hasAnyMaterial(materials) {
+        return Object.values(materials).some((value) => value > 0);
+      }
+
+      function formatNumber(value, digits = 0) {
+        return new Intl.NumberFormat(undefined, { maximumFractionDigits: digits }).format(
+          value
+        );
+      }
+
+      function formatDuration(minutes) {
+        if (minutes === null || !Number.isFinite(minutes)) return '—';
+        if (minutes <= 0) return '0 sec';
+        if (minutes < 1) return `${Math.round(minutes * 60)} sec`;
+
+        const totalSeconds = Math.round(minutes * 60);
+        const hours = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        if (hours > 0) return `${hours}h ${mins}m`;
+        if (seconds && minutes < 15) return `${mins}m ${seconds}s`;
+        return `${Math.round(minutes)} min`;
+      }
+
+      function getMetrics(state, settings) {
+        const solarGeneration = state.panels * settings.panelOutput;
+        const generatorGeneration = settings.generators * DATA.generator.output;
+        const generation = solarGeneration + generatorGeneration;
+        const drillDemand = state.drills * DATA.drill.draw;
+        const demand = drillDemand;
+        const surplus = generation - demand;
+        const totalCapacity = state.batteries * DATA.battery.capacity;
+        const maxBatteryOutput = state.batteries * settings.batteryOutput;
+        const maxBatteryCharge = state.batteries * settings.batteryOutput;
+        const chargePower = Math.min(Math.max(0, surplus), maxBatteryCharge);
+        const batteryDemand = Math.max(0, demand - generatorGeneration);
+        const generatorCoversLoad = demand > 0 && batteryDemand === 0;
+        const fullNightCoverage =
+          generatorCoversLoad || (batteryDemand > 0 && maxBatteryOutput >= batteryDemand);
+        const fullChargeRuntimeMinutes =
+          fullNightCoverage && batteryDemand > 0
+            ? totalCapacity / batteryDemand / 60
+            : null;
+        const emptyToFullMinutes =
+          chargePower > 0 && totalCapacity > 0
+            ? totalCapacity / chargePower / 60
+            : null;
+
+        return {
+          generation,
+          solarGeneration,
+          generatorGeneration,
+          drillDemand,
+          demand,
+          batteryDemand,
+          surplus,
+          totalCapacity,
+          maxBatteryOutput,
+          maxBatteryCharge,
+          chargePower,
+          generatorCoversLoad,
+          fullNightCoverage,
+          fullChargeRuntimeMinutes,
+          emptyToFullMinutes
+        };
+      }
+
+      function batteriesNeeded(drills, settings) {
+        const demand = drills * DATA.drill.draw;
+        const generatorPower = settings.generators * DATA.generator.output;
+        const batteryDemand = Math.max(0, demand - generatorPower);
+        if (batteryDemand <= 0) return 0;
+        const outputBatteries = Math.ceil(batteryDemand / settings.batteryOutput);
+        const capacityBatteries = Math.ceil(
+          batteryDemand * settings.bufferMinutes * 60 / DATA.battery.capacity
+        );
+        return Math.max(outputBatteries, capacityBatteries);
+      }
+
+      function panelsNeeded(drills, batteries, settings) {
+        const demand = drills * DATA.drill.draw;
+        const generatorPower = settings.generators * DATA.generator.output;
+        const batteryDemand = Math.max(0, demand - generatorPower);
+
+        if (settings.rechargeMinutes <= 0) {
+          const sparePower = batteries > 0 ? 1 : 0;
+          const requiredSolar = Math.max(0, demand + sparePower - generatorPower);
+          return Math.ceil(requiredSolar / settings.panelOutput);
+        }
+
+        const usedEnergy = batteryDemand * settings.bufferMinutes * 60;
+        const chargePower = usedEnergy / (settings.rechargeMinutes * 60);
+
+        const maxBatteryCharge = batteries * settings.batteryOutput;
+        if (chargePower > maxBatteryCharge) {
+          throw new Error(
+            `${settings.rechargeMinutes} minutes is faster than the battery bank can charge.`
+          );
+        }
+
+        const requiredSolar = Math.max(0, demand + chargePower - generatorPower);
+        return Math.ceil(requiredSolar / settings.panelOutput);
+      }
+
+      function buildPath(settings) {
+        const state = {
+          panels: settings.panels,
+          drills: settings.drills,
+          batteries: settings.batteries
+        };
+        const rows = [];
+        const cumulativeCost = zeroMaterials();
+
+        function addRow(type, reason) {
+          const item = DATA[type];
+          addMaterials(cumulativeCost, item.cost);
+          rows.push({
+            step: rows.length + 1,
+            type,
+            reason,
+            state: { ...state },
+            metrics: getMetrics(state, settings),
+            cost: { ...item.cost },
+            cumulativeCost: { ...cumulativeCost }
+          });
+        }
+
+        function addPanelsUntil(required, reason) {
+          while (state.panels < required) {
+            state.panels += 1;
+            addRow('panel', reason);
+          }
+        }
+
+        function addBatteriesUntil(required, reason) {
+          while (state.batteries < required) {
+            state.batteries += 1;
+            addRow('battery', reason);
+          }
+        }
+
+        function addBalancedUntil(requiredPanels, requiredBatteries, panelReason, batteryReason) {
+          while (state.panels < requiredPanels || state.batteries < requiredBatteries) {
+            if (state.panels < requiredPanels) {
+              state.panels += 1;
+              addRow('panel', panelReason);
+            }
+            if (state.batteries < requiredBatteries) {
+              state.batteries += 1;
+              addRow('battery', batteryReason);
+            }
+          }
+        }
+
+        function minimumDayPanels(drills) {
+          const demand = drills * DATA.drill.draw;
+          const generatorPower = settings.generators * DATA.generator.output;
+          return Math.ceil(Math.max(0, demand - generatorPower) / settings.panelOutput);
+        }
+
+        function repairCurrentGrid() {
+          const demand = state.drills * DATA.drill.draw;
+          if (demand <= 0) return;
+
+          const requiredBatteries = Math.max(
+            state.batteries,
+            batteriesNeeded(state.drills, settings)
+          );
+          const requiredPanels = Math.max(
+            state.panels,
+            panelsNeeded(state.drills, requiredBatteries, settings)
+          );
+
+          addPanelsUntil(
+            minimumDayPanels(state.drills),
+            'Repair the current baseline power deficit'
+          );
+          if (settings.approach === 'balanced') {
+            addBatteriesUntil(requiredBatteries, 'Add a buffer for changing conditions');
+            addPanelsUntil(requiredPanels, 'Recover the selected battery buffer in time');
+          } else {
+            addBalancedUntil(
+              requiredPanels,
+              requiredBatteries,
+              'Balance power and battery recovery',
+              'Add a buffer for changing conditions'
+            );
+          }
+        }
+
+        repairCurrentGrid();
+
+        while (state.drills < settings.targetDrills) {
+          const nextDrills = state.drills + 1;
+          const requiredBatteries = Math.max(
+            state.batteries,
+            batteriesNeeded(nextDrills, settings)
+          );
+          const rechargePanels = Math.max(
+            state.panels,
+            panelsNeeded(nextDrills, requiredBatteries, settings)
+          );
+
+          if (settings.approach === 'conservative') {
+            addBalancedUntil(
+              rechargePanels,
+              requiredBatteries,
+              `Prepare balanced power for drill ${nextDrills}`,
+              `Prepare a buffer for drill ${nextDrills}`
+            );
+            state.drills += 1;
+            addRow('drill', `Increase mining to ${state.drills} drills`);
+          } else {
+            addPanelsUntil(
+              minimumDayPanels(nextDrills),
+              `Prepare baseline power for drill ${nextDrills}`
+            );
+            state.drills += 1;
+            addRow('drill', `Increase mining to ${state.drills} drills`);
+            addBatteriesUntil(
+              requiredBatteries,
+              `Add a buffer for ${state.drills} drills`
+            );
+            addPanelsUntil(
+              rechargePanels,
+              `Recover the battery buffer for ${state.drills} drills in time`
+            );
+          }
+        }
+
+        return rows;
+      }
+
+      function materialList(materials, empty = '—') {
+        const parts = Object.entries(materials)
+          .filter(([, value]) => value > 0)
+          .map(
+            ([key, value]) =>
+              `<strong>${formatNumber(value)}</strong> ${MATERIAL_NAMES[key]}`
+          );
+        return parts.length ? parts.join('<br>') : empty;
+      }
+
+      function materialInline(materials, empty = 'none') {
+        const parts = Object.entries(materials)
+          .filter(([, value]) => value > 0)
+          .map(([key, value]) => `${formatNumber(value)} ${MATERIAL_NAMES[key]}`);
+        return parts.length ? parts.join(', ') : empty;
+      }
+
+      function setupChips(state, settings) {
+        return `
+        <span class="setup-chip"><img src="${DATA.panel.image}" alt="">${state.panels}</span>
+        <span class="setup-chip"><img src="${DATA.drill.image}" alt="">${state.drills}</span>
+        <span class="setup-chip"><img src="${DATA.battery.image}" alt="">${state.batteries}</span>
+        ${settings.generators > 0 ? `<span class="setup-chip"><img src="${DATA.generator.image}" alt="">${settings.generators}</span>` : ''}
+      `;
+      }
+
+      function currentStatuses(metrics) {
+        const day =
+          metrics.surplus >= 0
+            ? `<span class="status good">Daylight stable</span>`
+            : metrics.totalCapacity > 0 && metrics.maxBatteryOutput >= -metrics.surplus
+              ? `<span class="status warn">Battery can buffer daylight</span>`
+              : `<span class="status bad">Daylight deficit</span>`;
+
+        let night;
+        if (metrics.demand === 0) {
+          night = `<span class="status good">No active load</span>`;
+        } else if (metrics.generatorCoversLoad) {
+          night = `<span class="status warn">Generator-backed while fueled</span>`;
+        } else if (metrics.totalCapacity === 0) {
+          night = `<span class="status bad">No battery storage</span>`;
+        } else if (metrics.fullNightCoverage) {
+          night = `<span class="status good">Full-load output</span>`;
+        } else {
+          night = `<span class="status bad">Grid overloaded at night</span>`;
+        }
+
+        return day + night;
+      }
+
+      function renderCurrent(settings) {
+        const state = {
+          panels: settings.panels,
+          drills: settings.drills,
+          batteries: settings.batteries
+        };
+        const metrics = getMetrics(state, settings);
+        elements.currentStatuses.innerHTML = currentStatuses(metrics);
+
+        const rechargeValue =
+          metrics.totalCapacity === 0
+            ? 'No batteries'
+            : metrics.emptyToFullMinutes === null
+              ? 'Not charging'
+              : formatDuration(metrics.emptyToFullMinutes);
+        const rechargeSub =
+          metrics.totalCapacity === 0
+            ? 'Add a Battery to store power'
+            : metrics.surplus <= 0
+              ? 'No generation surplus'
+              : `Empty to full at ${formatNumber(metrics.chargePower)}/s${metrics.surplus > metrics.chargePower ? ' · charge-rate cap reached' : ''}`;
+
+        const runtimeValue =
+          metrics.demand === 0
+            ? 'No load'
+            : metrics.generatorCoversLoad
+              ? 'Fuel-limited'
+              : metrics.fullNightCoverage
+                ? formatDuration(metrics.fullChargeRuntimeMinutes)
+                : 'Insufficient output';
+        const runtimeSub = metrics.generatorCoversLoad
+          ? 'Generators cover the load only while manually fueled'
+          : metrics.fullNightCoverage
+            ? metrics.generatorGeneration > 0
+              ? 'Full bank · assumes Generators remain manually fueled'
+              : `Full bank · ${formatNumber(metrics.batteryDemand)} supplied by Batteries`
+            : `${formatNumber(metrics.maxBatteryOutput)} Battery output available`;
+
+        const surplusClass = metrics.surplus >= 0 ? 'positive' : 'negative';
+        const metricRows = [
+          [
+            'Total generation',
+            formatNumber(metrics.generation),
+            `${formatNumber(metrics.solarGeneration)} Solar + ${formatNumber(metrics.generatorGeneration)} fueled Generator`
+          ],
+          [
+            'Grid demand',
+            formatNumber(metrics.demand),
+            `${settings.drills} × ${DATA.drill.draw} per Drill`
+          ],
+          [
+            'Day surplus',
+            `<span class="${surplusClass}">${metrics.surplus >= 0 ? '+' : ''}${formatNumber(metrics.surplus)}</span>`,
+            metrics.surplus >= 0
+              ? 'Available for charging'
+              : 'Additional generation needed'
+          ],
+          [
+            'Battery capacity',
+            formatNumber(metrics.totalCapacity),
+            `${settings.batteries} × ${formatNumber(DATA.battery.capacity)}`
+          ],
+          ['Empty to full', rechargeValue, rechargeSub],
+          ['Backup runtime', runtimeValue, runtimeSub]
+        ];
+
+        elements.currentMetrics.innerHTML = metricRows
+          .map(
+            ([label, value, sub]) => `
+        <div class="metric">
+          <span class="metric-label">${label}</span>
+          <strong class="metric-value">${value}</strong>
+          <span class="metric-sub">${sub}</span>
+        </div>
+      `
+          )
+          .join('');
+      }
+
+      function countNoun(count, singular, plural = `${singular}s`) {
+        return `${count} ${count === 1 ? singular : plural}`;
+      }
+
+      function renderMaterialResult(rows, settings) {
+        if (!settings.tracksMaterials) {
+          elements.materialResult.innerHTML = `
+          <h3>Material check</h3>
+          <p>Enter Iron, Copper, Glass, or Silicon to see how many recommended builds you can craft now.</p>
+        `;
+          return;
+        }
+
+        let reachable = 0;
+        for (const row of rows) {
+          if (hasAnyMaterial(missingMaterials(settings.materials, row.cumulativeCost)))
+            break;
+          reachable += 1;
+        }
+
+        if (!rows.length) {
+          elements.materialResult.innerHTML = `
+          <h3>Target reached</h3>
+          <p>Your current drill count already meets the selected target.</p>
+        `;
+          return;
+        }
+
+        const reachedState =
+          reachable > 0
+            ? rows[reachable - 1].state
+            : {
+                panels: settings.panels,
+                drills: settings.drills,
+                batteries: settings.batteries
+              };
+        const nextRow = rows[reachable] || null;
+
+        if (!nextRow) {
+          const remaining = subtractMaterials(
+            settings.materials,
+            rows.at(-1).cumulativeCost
+          );
+          elements.materialResult.innerHTML = `
+          <h3>You can craft the full plan</h3>
+          <p>
+            ${rows.length} builds reach <strong>${countNoun(reachedState.panels, 'panel')}, ${countNoun(reachedState.drills, 'drill')}, and ${countNoun(reachedState.batteries, 'battery', 'batteries')}</strong>.
+            Remaining materials: <strong>${materialInline(remaining)}</strong>.
+          </p>
+        `;
+          return;
+        }
+
+        const missing = missingMaterials(settings.materials, nextRow.cumulativeCost);
+        elements.materialResult.innerHTML = `
+        <h3>You can craft ${reachable} of ${rows.length} next builds</h3>
+        <p>
+          That reaches <strong>${countNoun(reachedState.panels, 'panel')}, ${countNoun(reachedState.drills, 'drill')}, and ${countNoun(reachedState.batteries, 'battery', 'batteries')}</strong>.
+          The next build is <strong>${DATA[nextRow.type].name}</strong>; you still need <strong>${materialInline(missing)}</strong> to reach that step.
+        </p>
+      `;
+      }
+
+      function inventoryStatus(row, settings) {
+        if (!settings.tracksMaterials) {
+          return `<span class="availability untracked">Inventory not entered</span>`;
+        }
+
+        const missing = missingMaterials(settings.materials, row.cumulativeCost);
+        if (!hasAnyMaterial(missing)) {
+          const remaining = subtractMaterials(settings.materials, row.cumulativeCost);
+          return `<span class="availability ready">Reachable · ${materialInline(remaining)} left</span>`;
+        }
+
+        return `<span class="availability missing">Need ${materialInline(missing)}</span>`;
+      }
+
+      function batteryRule(metrics) {
+        if (metrics.generatorCoversLoad && metrics.totalCapacity === 0) {
+          return {
+            main: 'Generator covers full load',
+            sub: 'Manual fuel · observed converted timer caps around 12 min'
+          };
+        }
+
+        if (metrics.totalCapacity === 0) {
+          return { main: 'No storage', sub: 'Add a Battery to store power' };
+        }
+
+        const chargeCap =
+          metrics.emptyToFullMinutes !== null && metrics.surplus > metrics.chargePower
+            ? ` · charging capped at ${formatNumber(metrics.chargePower)}/s`
+            : '';
+
+        return {
+          main: metrics.emptyToFullMinutes !== null
+            ? `${formatDuration(metrics.emptyToFullMinutes)} empty → full`
+            : 'Cannot recharge in this setup',
+          sub: metrics.generatorCoversLoad
+            ? 'Generators cover load while fueled; Battery remains reserve'
+            : metrics.fullNightCoverage && metrics.batteryDemand > 0
+            ? `${formatDuration(metrics.fullChargeRuntimeMinutes)} runtime from full${metrics.generatorGeneration > 0 ? ' while Generator stays fueled' : ''}${chargeCap}`
+            : 'Grid overloaded · insufficient output'
+        };
+      }
+
+      function renderRows(rows, settings) {
+        elements.emptyPath.hidden = rows.length > 0;
+        elements.tableWrap.hidden = rows.length === 0;
+
+        elements.upgradeRows.innerHTML = rows
+          .map((row) => {
+            const item = DATA[row.type];
+            const surplusClass = row.metrics.surplus >= 0 ? 'positive' : 'negative';
+            const rowBatteryRule = batteryRule(row.metrics);
+            const highlightsBackup =
+              row.metrics.fullNightCoverage &&
+              row.metrics.fullChargeRuntimeMinutes > 20;
+
+            return `
+          <tr${highlightsBackup ? ' class="long-backup"' : ''}>
+            <td><span class="step">${row.step}</span></td>
+            <td>
+              <div class="build-cell">
+                <img src="${item.image}" alt="${item.name}">
+                <div>
+                  <span class="build-title">+1 ${item.name}</span>
+                  <span class="build-reason">${row.reason}</span>
+                </div>
+              </div>
+            </td>
+            <td><div class="setup">${setupChips(row.state, settings)}</div></td>
+            <td>
+              <span class="main-number">${formatNumber(row.metrics.generation)} generated</span>
+              <span class="sub-number">${formatNumber(row.metrics.demand)} used · <span class="${surplusClass}">${row.metrics.surplus >= 0 ? '+' : ''}${formatNumber(row.metrics.surplus)}</span></span>
+            </td>
+            <td>
+              <span class="main-number">${rowBatteryRule.main}</span>
+              <span class="sub-number">${rowBatteryRule.sub}</span>
+            </td>
+            <td class="cost-list">${materialList(row.cost)}</td>
+            <td>${inventoryStatus(row, settings)}</td>
+          </tr>
+        `;
+          })
+          .join('');
+      }
+
+      function updateQuery(settings) {
+        const params = new URLSearchParams();
+        const scalarValues = {
+          panels: settings.panels,
+          drills: settings.drills,
+          batteries: settings.batteries,
+          generators: settings.generators,
+          target: settings.targetDrills,
+          approach: settings.approach,
+          recharge: settings.rechargeMinutes,
+          buffer: settings.bufferMinutes,
+          weather: settings.panelOutput
+        };
+        for (const [key, value] of Object.entries(scalarValues)) {
+          if (value !== null) params.set(key, value);
+        }
+        if (settings.tracksMaterials) {
+          for (const key of Object.keys(settings.materials))
+            params.set(key, settings.materials[key]);
+        }
+
+        try {
+          history.replaceState(null, '', `${location.pathname}?${params.toString()}`);
+        } catch {
+          // Local previews may not permit history changes.
+        }
+      }
+
+      function render() {
+        try {
+          const settings = readSettings();
+          const rows = buildPath(settings);
+
+          elements.errorBox.style.display = 'none';
+          renderCurrent(settings);
+          renderMaterialResult(rows, settings);
+          renderRows(rows, settings);
+
+          const recoveryText = settings.rechargeMinutes > 0
+            ? `${settings.bufferMinutes} min buffer recovered ${settings.rechargeMinutes === 20 ? 'within one day (20 min)' : `within ${settings.rechargeMinutes} min`}`
+            : `${settings.bufferMinutes} min buffer with any positive recharge surplus`;
+          const approachText = settings.approach === 'balanced' ? 'Balanced' : 'Conservative';
+          elements.pathDescription.textContent =
+            `Starting from ${settings.panels} panels / ${settings.drills} drills / ${settings.batteries} batteries + ${settings.generators} manually fueled generators · ${rows.length} builds · ${approachText} approach · ${settings.weather} baseline · ${recoveryText}`;
+          updateQuery(settings);
+        } catch (error) {
+          elements.errorBox.textContent =
+            error instanceof Error ? error.message : String(error);
+          elements.errorBox.style.display = 'block';
+        }
+      }
+
+      function readQuery() {
+        const params = new URLSearchParams(location.search);
+        const map = {
+          panels: 'panels',
+          drills: 'drills',
+          batteries: 'batteries',
+          generators: 'generators',
+          target: 'targetDrills',
+          approach: 'approach',
+          recharge: 'rechargeTarget',
+          buffer: 'bufferMinutes',
+          weather: 'weather',
+          iron: 'iron',
+          copper: 'copper',
+          glass: 'glass',
+          silicon: 'silicon'
+        };
+
+        for (const [param, id] of Object.entries(map)) {
+          if (params.has(param)) elements[id].value = params.get(param);
+        }
+      }
+
+      for (const input of document.querySelectorAll('input, select')) {
+        input.addEventListener('input', render);
+        input.addEventListener('change', render);
+      }
+
+      elements.copyLink.addEventListener('click', async () => {
+        const original = elements.copyLink.textContent;
+        try {
+          await navigator.clipboard.writeText(location.href);
+          elements.copyLink.textContent = 'Copied';
+        } catch {
+          elements.copyLink.textContent = 'Copy failed';
+        }
+        setTimeout(() => {
+          elements.copyLink.textContent = original;
+        }, 1400);
+      });
+
+      readQuery();
+      render();
+    </script>
+  </body>
+</html>
