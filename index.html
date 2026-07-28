@@ -1247,6 +1247,7 @@
             <p id="pathDescription">One row per build. Recharge times do not assume time between upgrades.</p>
           </div>
           <div class="table-actions">
+            <button class="button" id="resetSettings" type="button">Reset settings</button>
             <button class="button" id="copyLink" type="button">Copy settings link</button>
           </div>
         </div>
@@ -1477,6 +1478,7 @@
         upgradeRows: document.getElementById('upgradeRows'),
         pathDescription: document.getElementById('pathDescription'),
         errorBox: document.getElementById('errorBox'),
+        resetSettings: document.getElementById('resetSettings'),
         copyLink: document.getElementById('copyLink'),
         tableWrap: document.getElementById('tableWrap'),
         emptyPath: document.getElementById('emptyPath')
@@ -2165,6 +2167,24 @@
         input.addEventListener('input', render);
         input.addEventListener('change', render);
       }
+
+      elements.resetSettings.addEventListener('click', () => {
+        for (const input of document.querySelectorAll('input')) {
+          input.value = input.defaultValue;
+        }
+        for (const select of document.querySelectorAll('select')) {
+          const defaultOption = Array.from(select.options).find(
+            (option) => option.defaultSelected
+          );
+          select.value = defaultOption?.value ?? select.options[0]?.value ?? '';
+        }
+        render();
+        try {
+          history.replaceState(null, '', location.pathname);
+        } catch {
+          // Local previews may not permit history changes.
+        }
+      });
 
       elements.copyLink.addEventListener('click', async () => {
         const original = elements.copyLink.textContent;
